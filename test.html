@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+	<title>title</title>
+	<style>
+		@keyframes blinking {
+			0%  { opacity:1; }
+			50% { opacity:0; }
+		}
+		#blink-slow {
+			animation: blinking;
+			animation-duration: 0.6s;
+			animation-iteration-count: infinite;
+			animation-timing-function: step-start;
+		}
+		#blink-rapid {
+			animation: blinking;
+			animation-duration: 0.3s;
+			animation-iteration-count: infinite;
+			animation-timing-function: step-start;
+		}
+	</style>
+</head>
+<body>
+<pre style="font-family: monospace">
+---------------------------------------------------------------------------------------------------
+benchmark:
+     [0] [1]  [2]                   [3] [4] [5] [6]  [7] [8] [9] [10]   [11]                        
+---------------------------------------------------------------------------------------------------
+fizz_buzz/sequence::i32&lt;1&gt;/clang-18.1.8/linux/alderlake:
+  if (n % 15 == 0) {
+    1.   572a  69 c8 ef ee ee ee      6  1  3   1.00           2657    imul ecx, eax, 4008636143   
+    2.   5730  81 c1 88 88 88 08      6  1  1   0.20           698428  add ecx, 143165576          
+    3.   5736  81 f9 11 11 11 11      6  1  1   0.20           700328  cmp ecx, 286331153          
+    4.   573c  72 38                  2  1  1   0.50           481121  jb 56                       
+  } else if (n % 3 == 0) {
+    5.   573e  69 c8 ab aa aa aa      6  1  3   1.00                   imul ecx, eax, 2863311531   
+    6.   5744  81 c1 aa aa aa 2a      6  1  1   0.20                   add ecx, 715827882          
+    7.   574a  81 f9 55 55 55 55      6  1  1   0.20                   cmp ecx, 1431655765         
+    8.   5750  72 2d                  2  1  1   0.50                   jb 45                       
+  } else if (n % 5 == 0) {
+    9.   5752  69 c0 cd cc cc cc      6  1  3   1.00                   imul eax, eax, 3435973837   
+    10.  5758  05 99 99 99 19         5  1  1   0.20                   add eax, 429496729          
+    11.  575d  3d 33 33 33 33         5  1  1   0.20                   cmp eax, 858993459          
+    12.  5762  48 8d 0d a5 71 01 00   7  1  1   1.00                   lea rcx, [rip + 94629]      
+    13.  5769  48 8d 05 a8 71 01 00   7  1  1   1.00                   lea rax, [rip + 94632]      
+    14.  5770  48 0f 42 c1            4  1  1   0.50                   cmovb rax, rcx              
+    15.  5774  eb 10                  2  0  0   0.00                   jmp 16                      
+    16.  5776  48 8d 05 8d 71 01 00   7  1  1   1.00           482421  lea rax, [rip + 94605]      
+    17.  577d  eb 07                  2  0  0   0.00           364110  jmp 7                       
+    18.  577f  48 8d 05 8d 71 01 00   7  1  1   1.00                   lea rax, [rip + 94605]      
+  /* return */
+    19.  5786  48 89 44 24 f8         5  2  12  0.50     *     365110  mov qword ptr [rsp - 8], rax
+
+fizz_buzz/sequence::i32&lt;3&gt;/clang-18.1.8/linux/alderlake:
+  if (n % 15 == 0) {
+    1.   5c9a  69 c8 ef ee ee ee      6  1  3   1.00           80193   imul ecx, eax, 4008636143   
+    2.   5ca0  81 c1 88 88 88 08      6  1  1   0.20           34755   add ecx, 143165576          
+    3.   5ca6  81 f9 11 11 11 11      6  1  1   0.20           31817   cmp ecx, 286331153          
+    4.   5cac  72 38                  2  1  1   0.50           23599   jb 56                       
+  } else if (n % 3 == 0) {
+    5.   5cae  69 c8 ab aa aa aa      6  1  3   1.00           63838   imul ecx, eax, 2863311531   
+    6.   5cb4  81 c1 aa aa aa 2a      6  1  1   0.20           32021   add ecx, 715827882          
+    7.   5cba  81 f9 55 55 55 55      6  1  1   0.20                   cmp ecx, 1431655765         
+    8.   5cc0  72 2d                  2  1  1   0.50           5298    jb 45                       
+  } else if (n % 5 == 0) {
+    9.   5cc2  69 c0 cd cc cc cc      6  1  3   1.00           37032   imul eax, eax, 3435973837   
+    10.  5cc8  05 99 99 99 19         5  1  1   0.20           31934   add eax, 429496729          
+    11.  5ccd  3d 33 33 33 33         5  1  1   0.20                   cmp eax, 858993459          
+    12.  5cd2  48 8d 0d 35 6c 01 00   7  1  1   1.00                   lea rcx, [rip + 93237]      
+    13.  5cd9  48 8d 05 38 6c 01 00   7  1  1   1.00                   lea rax, [rip + 93240]      
+    14.  5ce0  48 0f 42 c1            4  1  1   0.50                   cmovb rax, rcx              
+    15.  5ce4  eb 10                  2  0  0   0.00           16923   jmp 16                      
+    16.  5ce6  48 8d 05 1d 6c 01 00   7  1  1   1.00           33705   lea rax, [rip + 93213]      
+    17.  5ced  eb 07                  2  0  0   0.00           80773   jmp 7                       
+    18.  5cef  48 8d 05 1d 6c 01 00   7  1  1   1.00           47027   lea rax, [rip + 93213]      
+  /* return */
+    19.  5cf6  48 89 44 24 f8         5  2  12  0.50     *     157649  mov qword ptr [rsp - 8], rax
+
+fizz_buzz/range::i32&lt;0:15:1&gt;/clang-18.1.8/linux/alderlake:
+  if (n % 15 == 0) {
+    1.   620a  69 c8 ef ee ee ee      6  1  3   1.00           2660    imul ecx, eax, 4008636143   
+    2.   6210  81 c1 88 88 88 08      6  1  1   0.20           32873   add ecx, 143165576          
+    3.   6216  81 f9 11 11 11 11      6  1  1   0.20           38405   cmp ecx, 286331153          
+    4.   621c  72 38                  2  1  1   0.50                   jb 56                       
+  } else if (n % 3 == 0) {
+    5.   621e  69 c8 ab aa aa aa      6  1  3   1.00           34871   imul ecx, eax, 2863311531   
+    6.   6224  81 c1 aa aa aa 2a      6  1  1   0.20           29639   add ecx, 715827882          
+    7.   622a  81 f9 55 55 55 55      6  1  1   0.20                   cmp ecx, 1431655765         
+    8.   6230  72 2d                  2  1  1   0.50           12288   jb 45                       
+  } else if (n % 5 == 0) {
+    9.   6232  69 c0 cd cc cc cc      6  1  3   1.00                   imul eax, eax, 3435973837   
+    10.  6238  05 99 99 99 19         5  1  1   0.20                   add eax, 429496729          
+    11.  623d  3d 33 33 33 33         5  1  1   0.20           38419   cmp eax, 858993459          
+    12.  6242  48 8d 0d c5 66 01 00   7  1  1   1.00           67351   lea rcx, [rip + 91845]      
+    13.  6249  48 8d 05 c8 66 01 00   7  1  1   1.00           28932   lea rax, [rip + 91848]      
+    14.  6250  48 0f 42 c1            4  1  1   0.50           7416    cmovb rax, rcx              
+    15.  6254  eb 10                  2  0  0   0.00           20499   jmp 16                      
+    16.  6256  48 8d 05 ad 66 01 00   7  1  1   1.00           16917   lea rax, [rip + 91821]      
+    17.  625d  eb 07                  2  0  0   0.00           17117   jmp 7                       
+    18.  625f  48 8d 05 ad 66 01 00   7  1  1   1.00           50877   lea rax, [rip + 91821]      
+  /* return */
+    19.  6266  48 89 44 24 f8         5  2  12  0.50     *     227587  mov qword ptr [rsp - 8], rax
+
+fizz_buzz/uniform::i32&lt;0:15&gt;/clang-18.1.8/linux/alderlake:
+  if (n % 15 == 0) {
+    1.   677a  69 c8 ef ee ee ee      6  1  3   1.00           86661   imul ecx, eax, 4008636143   
+    2.   6780  81 c1 88 88 88 08      6  1  1   0.20           112280  add ecx, 143165576          
+    3.   6786  81 f9 11 11 11 11      6  1  1   0.20           263726  cmp ecx, 286331153          
+    4.   678c  72 38                  2  1  1   0.50           61968   jb 56                       
+  } else if (n % 3 == 0) {
+    5.   678e  69 c8 ab aa aa aa      6  1  3   1.00           563224  imul ecx, eax, 2863311531   
+    6.   6794  81 c1 aa aa aa 2a      6  1  1   0.20           373899  add ecx, 715827882          
+    7.   679a  81 f9 55 55 55 55      6  1  1   0.20           11463   cmp ecx, 1431655765         
+    8.   67a0  72 2d                  2  1  1   0.50           45909   jb 45                       
+  } else if (n % 5 == 0) {
+    9.   67a2  69 c0 cd cc cc cc      6  1  3   1.00           173649  imul eax, eax, 3435973837   
+    10.  67a8  05 99 99 99 19         5  1  1   0.20           162786  add eax, 429496729          
+    11.  67ad  3d 33 33 33 33         5  1  1   0.20                   cmp eax, 858993459          
+    12.  67b2  48 8d 0d 55 61 01 00   7  1  1   1.00                   lea rcx, [rip + 90453]      
+    13.  67b9  48 8d 05 58 61 01 00   7  1  1   1.00                   lea rax, [rip + 90456]      
+    14.  67c0  48 0f 42 c1            4  1  1   0.50           5300    cmovb rax, rcx              
+    15.  67c4  eb 10                  2  0  0   0.00           5400    jmp 16                      
+    16.  67c6  48 8d 05 3d 61 01 00   7  1  1   1.00           480208  lea rax, [rip + 90429]      
+    17.  67cd  eb 07                  2  0  0   0.00           442760  jmp 7                       
+    18.  67cf  48 8d 05 3d 61 01 00   7  1  1   1.00           431209  lea rax, [rip + 90429]      
+  /* return */
+    19.  67d6  48 89 44 24 f8         5  2  12  0.50     *     589176  mov qword ptr [rsp - 8], rax
+---------------------------------------------------------------------------------------------------
+[0]: index [1-N]
+[1]: mca/instr/address [hex addr]
+[2]: mca/instr/encoding [hex byte...]
+[3]: mca/instr/size (bytes)
+[4]: mca/instr/uops
+[5]: mca/instr/latency [cycles]
+[6]: mca/instr/rthroughput
+[7]: mca/instr/may_load [*]
+[8]: mca/instr/may_store [*]
+[9]: mca/instr/has_side_effects [U]
+[10]: record/cycles - https://perfmon-events.intel.com [alderlake]
+[11]: mca/disassemble [syntax: intel]
+
+------------------------------------------------------------------
+benchmark:
+     [0] [1]  [2]                   [3]                         
+------------------------------------------------------------------
+fizz_buzz/sequence::i32&lt;1&gt;/clang-18.1.8/linux/alderlake:
+  if (n % 15 == 0) {
+    1.   572a  69 c8 ef ee ee ee      imul ecx, eax, 4008636143   
+    2.   5730  81 c1 88 88 88 08      add ecx, 143165576          
+    3.   5736  81 f9 11 11 11 11      cmp ecx, 286331153          
+    4.   573c  72 38                  jb 56                       
+  } else if (n % 3 == 0) {
+    5.   573e  69 c8 ab aa aa aa      imul ecx, eax, 2863311531   
+    6.   5744  81 c1 aa aa aa 2a      add ecx, 715827882          
+    7.   574a  81 f9 55 55 55 55      cmp ecx, 1431655765         
+    8.   5750  72 2d                  jb 45                       
+  } else if (n % 5 == 0) {
+    9.   5752  69 c0 cd cc cc cc      imul eax, eax, 3435973837   
+    10.  5758  05 99 99 99 19         add eax, 429496729          
+    11.  575d  3d 33 33 33 33         cmp eax, 858993459          
+    12.  5762  48 8d 0d a5 71 01 00   lea rcx, [rip + 94629]      
+    13.  5769  48 8d 05 a8 71 01 00   lea rax, [rip + 94632]      
+    14.  5770  48 0f 42 c1            cmovb rax, rcx              
+    15.  5774  eb 10                  jmp 16                      
+    16.  5776  48 8d 05 8d 71 01 00   lea rax, [rip + 94605]      
+    17.  577d  eb 07                  jmp 7                       
+    18.  577f  48 8d 05 8d 71 01 00   lea rax, [rip + 94605]      
+  /* return */
+    19.  5786  48 89 44 24 f8         mov qword ptr [rsp - 8], rax
+
+fizz_buzz/sequence::i32&lt;3&gt;/clang-18.1.8/linux/alderlake:
+  if (n % 15 == 0) {
+    1.   5c9a  69 c8 ef ee ee ee      imul ecx, eax, 4008636143   
+    2.   5ca0  81 c1 88 88 88 08      add ecx, 143165576          
+    3.   5ca6  81 f9 11 11 11 11      cmp ecx, 286331153          
+    4.   5cac  72 38                  jb 56                       
+  } else if (n % 3 == 0) {
+    5.   5cae  69 c8 ab aa aa aa      imul ecx, eax, 2863311531   
+    6.   5cb4  81 c1 aa aa aa 2a      add ecx, 715827882          
+    7.   5cba  81 f9 55 55 55 55      cmp ecx, 1431655765         
+    8.   5cc0  72 2d                  jb 45                       
+  } else if (n % 5 == 0) {
+    9.   5cc2  69 c0 cd cc cc cc      imul eax, eax, 3435973837   
+    10.  5cc8  05 99 99 99 19         add eax, 429496729          
+    11.  5ccd  3d 33 33 33 33         cmp eax, 858993459          
+    12.  5cd2  48 8d 0d 35 6c 01 00   lea rcx, [rip + 93237]      
+    13.  5cd9  48 8d 05 38 6c 01 00   lea rax, [rip + 93240]      
+    14.  5ce0  48 0f 42 c1            cmovb rax, rcx              
+    15.  5ce4  eb 10                  jmp 16                      
+    16.  5ce6  48 8d 05 1d 6c 01 00   lea rax, [rip + 93213]      
+    17.  5ced  eb 07                  jmp 7                       
+    18.  5cef  48 8d 05 1d 6c 01 00   lea rax, [rip + 93213]      
+  /* return */
+    19.  5cf6  48 89 44 24 f8         mov qword ptr [rsp - 8], rax
+
+fizz_buzz/range::i32&lt;0:15:1&gt;/clang-18.1.8/linux/alderlake:
+  if (n % 15 == 0) {
+    1.   620a  69 c8 ef ee ee ee      imul ecx, eax, 4008636143   
+    2.   6210  81 c1 88 88 88 08      add ecx, 143165576          
+    3.   6216  81 f9 11 11 11 11      cmp ecx, 286331153          
+    4.   621c  72 38                  jb 56                       
+  } else if (n % 3 == 0) {
+    5.   621e  69 c8 ab aa aa aa      imul ecx, eax, 2863311531   
+    6.   6224  81 c1 aa aa aa 2a      add ecx, 715827882          
+    7.   622a  81 f9 55 55 55 55      cmp ecx, 1431655765         
+    8.   6230  72 2d                  jb 45                       
+  } else if (n % 5 == 0) {
+    9.   6232  69 c0 cd cc cc cc      imul eax, eax, 3435973837   
+    10.  6238  05 99 99 99 19         add eax, 429496729          
+    11.  623d  3d 33 33 33 33         cmp eax, 858993459          
+    12.  6242  48 8d 0d c5 66 01 00   lea rcx, [rip + 91845]      
+    13.  6249  48 8d 05 c8 66 01 00   lea rax, [rip + 91848]      
+    14.  6250  48 0f 42 c1            cmovb rax, rcx              
+    15.  6254  eb 10                  jmp 16                      
+    16.  6256  48 8d 05 ad 66 01 00   lea rax, [rip + 91821]      
+    17.  625d  eb 07                  jmp 7                       
+    18.  625f  48 8d 05 ad 66 01 00   lea rax, [rip + 91821]      
+  /* return */
+    19.  6266  48 89 44 24 f8         mov qword ptr [rsp - 8], rax
+
+fizz_buzz/uniform::i32&lt;0:15&gt;/clang-18.1.8/linux/alderlake:
+  if (n % 15 == 0) {
+    1.   677a  69 c8 ef ee ee ee      imul ecx, eax, 4008636143   
+    2.   6780  81 c1 88 88 88 08      add ecx, 143165576          
+    3.   6786  81 f9 11 11 11 11      cmp ecx, 286331153          
+    4.   678c  72 38                  jb 56                       
+  } else if (n % 3 == 0) {
+    5.   678e  69 c8 ab aa aa aa      imul ecx, eax, 2863311531   
+    6.   6794  81 c1 aa aa aa 2a      add ecx, 715827882          
+    7.   679a  81 f9 55 55 55 55      cmp ecx, 1431655765         
+    8.   67a0  72 2d                  jb 45                       
+  } else if (n % 5 == 0) {
+    9.   67a2  69 c0 cd cc cc cc      imul eax, eax, 3435973837   
+    10.  67a8  05 99 99 99 19         add eax, 429496729          
+    11.  67ad  3d 33 33 33 33         cmp eax, 858993459          
+    12.  67b2  48 8d 0d 55 61 01 00   lea rcx, [rip + 90453]      
+    13.  67b9  48 8d 05 58 61 01 00   lea rax, [rip + 90456]      
+    14.  67c0  48 0f 42 c1            cmovb rax, rcx              
+    15.  67c4  eb 10                  jmp 16                      
+    16.  67c6  48 8d 05 3d 61 01 00   lea rax, [rip + 90429]      
+    17.  67cd  eb 07                  jmp 7                       
+    18.  67cf  48 8d 05 3d 61 01 00   lea rax, [rip + 90429]      
+  /* return */
+    19.  67d6  48 89 44 24 f8         mov qword ptr [rsp - 8], rax
+------------------------------------------------------------------
+[0]: index [1-N]
+[1]: mca/instr/address [hex addr]
+[2]: mca/instr/encoding [hex byte...]
+[3]: mca/disassemble [syntax: intel]
+
+---------------------------------------------------------------------------------------
+benchmark                                                                           [0]
+---------------------------------------------------------------------------------------
+fizz_buzz/sequence::i32&lt;1&gt;/clang-18.1.8/linux/alderlake/min                        0.00
+fizz_buzz/sequence::i32&lt;1&gt;/clang-18.1.8/linux/alderlake/mean                       0.49
+fizz_buzz/sequence::i32&lt;1&gt;/clang-18.1.8/linux/alderlake/median                     0.51
+fizz_buzz/sequence::i32&lt;1&gt;/clang-18.1.8/linux/alderlake/p50                        0.51
+fizz_buzz/sequence::i32&lt;1&gt;/clang-18.1.8/linux/alderlake/p75                        0.58
+fizz_buzz/sequence::i32&lt;1&gt;/clang-18.1.8/linux/alderlake/p99                        0.84
+fizz_buzz/sequence::i32&lt;1&gt;/clang-18.1.8/linux/alderlake/max                        1.74
+fizz_buzz/sequence::i32&lt;1&gt;/clang-18.1.8/linux/alderlake/median_absolute_error      0.14
+---------------------------------------------------------------------------------------
+fizz_buzz/sequence::i32&lt;3&gt;/clang-18.1.8/linux/alderlake/min                        0.00
+fizz_buzz/sequence::i32&lt;3&gt;/clang-18.1.8/linux/alderlake/mean                       0.72
+fizz_buzz/sequence::i32&lt;3&gt;/clang-18.1.8/linux/alderlake/median                     0.72
+fizz_buzz/sequence::i32&lt;3&gt;/clang-18.1.8/linux/alderlake/p50                        0.72
+fizz_buzz/sequence::i32&lt;3&gt;/clang-18.1.8/linux/alderlake/p75                        0.77
+fizz_buzz/sequence::i32&lt;3&gt;/clang-18.1.8/linux/alderlake/p99                        1.30
+fizz_buzz/sequence::i32&lt;3&gt;/clang-18.1.8/linux/alderlake/max                        2.89
+fizz_buzz/sequence::i32&lt;3&gt;/clang-18.1.8/linux/alderlake/median_absolute_error      0.06
+---------------------------------------------------------------------------------------
+fizz_buzz/range::i32&lt;0:15:1&gt;/clang-18.1.8/linux/alderlake/min                      0.68
+fizz_buzz/range::i32&lt;0:15:1&gt;/clang-18.1.8/linux/alderlake/mean                     1.05
+fizz_buzz/range::i32&lt;0:15:1&gt;/clang-18.1.8/linux/alderlake/median                   1.05
+fizz_buzz/range::i32&lt;0:15:1&gt;/clang-18.1.8/linux/alderlake/p50                      1.05
+fizz_buzz/range::i32&lt;0:15:1&gt;/clang-18.1.8/linux/alderlake/p75                      1.06
+fizz_buzz/range::i32&lt;0:15:1&gt;/clang-18.1.8/linux/alderlake/p99                      1.28
+fizz_buzz/range::i32&lt;0:15:1&gt;/clang-18.1.8/linux/alderlake/max                      2.75
+fizz_buzz/range::i32&lt;0:15:1&gt;/clang-18.1.8/linux/alderlake/median_absolute_error    0.01
+---------------------------------------------------------------------------------------
+fizz_buzz/uniform::i32&lt;0:15&gt;/clang-18.1.8/linux/alderlake/min                      0.30
+fizz_buzz/uniform::i32&lt;0:15&gt;/clang-18.1.8/linux/alderlake/mean                     0.99
+fizz_buzz/uniform::i32&lt;0:15&gt;/clang-18.1.8/linux/alderlake/median                   0.98
+fizz_buzz/uniform::i32&lt;0:15&gt;/clang-18.1.8/linux/alderlake/p50                      0.98
+fizz_buzz/uniform::i32&lt;0:15&gt;/clang-18.1.8/linux/alderlake/p75                      1.03
+fizz_buzz/uniform::i32&lt;0:15&gt;/clang-18.1.8/linux/alderlake/p99                      1.07
+fizz_buzz/uniform::i32&lt;0:15&gt;/clang-18.1.8/linux/alderlake/max                      3.17
+fizz_buzz/uniform::i32&lt;0:15&gt;/clang-18.1.8/linux/alderlake/median_absolute_error    0.05
+---------------------------------------------------------------------------------------
+[0]: time/cpu [ns] (user-time + sys-time)
+
+<div><img src="data:image/png;base64,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
+" /></div><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAAH0BAMAAAA3blRLAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAElBMVEUAAAChoaGo2dscNldF
+ep7///9x40KwAAAAAWJLR0QF+G/pxwAAAAd0SU1FB+gMEwgxAQ7WQKMAAAOiSURBVHja7d3RbcIw
+FEBRWnUA2KBiAiQW6Ef3n6kLUAmEE9/I53oBk6OXL5R3OkmSJEmSJEmSpN27OBue82xeSZIkSZIk
+SZIkSZIkSZIkSZIkSZIkSZIkSZLG9Xkd2/fsH3T0gMQCEgtILCCxgMQCEgtILCCxgMQCEgtILCCx
+gMQCEgtIrHVAZi90ePIMB7Gu4r3WmZCDBCQWkFhAYgGJBSTWfiD3wd1mPzogQIAAAQKkFZBYQGIB
+iQUkFpBYQGIBiQUkFpBYQGIBiQUkFpBYQGIBiQUkFpBYQGIBiQUkFpBYQGIBiQUkFpBYQGIBiQUk
+FpBYQGIBiQUkFpBYQGIBiQUkFpBYQGIBiQUkFpBYQGIBiQUkFpBYQGIBiQUkFpBYQGKtAzJ9EUVt
+XcVskIO0zoQcJCCxgMQCEgtILCCxgMQCEgtILCCxgMQCEgtILCCxgMQCEgtILCCxgMQCEgtILCCx
+gMQC8lRfv4MDAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQI
+ECBAgAABAgQIECBAgAABAqQA8tYSieEg1lWYkNqEAAECBAgQIECAAAECBAgQIECAAAECBAgQIECA
+AAECBAgQIECAAAECBAgQIECA7ANyeTIgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQIE
+CBAgQIAAAQIECBAgQIAAAQIECBAgQIAAAQJkJxDrKmIgJgQIECBAgAABAgQIECBAgAABAgQIECBA
+gAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAABAgQIECBAgAAB
+AgQIECBAgAABAgQIECBAgAABAgQIECBAgAABsi2IdRUxEBMCBAgQIECAAAECBAgQIECAAAECBAgQ
+IECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECAAAECBAgQIECA
+AAECBAgQIECAAAECBAgQIECAAAECBAgQIECAANkWxLqKnUAkSZIkSZIkSZIkSdL/fbz0NxNtHpBY
+D0HOs2+1cEBieWXFAhLLK0uSJEmSJEmSpOE9/KDCz+xbLRyQWEBiAYkFJBaQWEBiAZEkSZIkSZIk
+aXgvrjvR1gGJBSQWkFhAYgGJBSQWEEmSJEmSJEmShnd/1G32rRYOSCwgsYDEAhILSCwgsYBIkiRJ
+kiRJUr8/zv6D6wXV8dgAAAAldEVYdGRhdGU6Y3JlYXRlADIwMjQtMTItMTlUMDg6NDk6MDErMDA6
+MDCri41JAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDI0LTEyLTE5VDA4OjQ5OjAxKzAwOjAw2tY19QAA
+AABJRU5ErkJggg==
+" /></div><div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAyAAAAH0BAMAAAA3blRLAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
+AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAGFBMVEWhoaEAAAAcNldFep6o
+2dtPT094eHj////+nMiGAAAAAWJLR0QHFmGI6wAAAAd0SU1FB+gMEwgxAQ7WQKMAABNqSURBVHja
+7Z1dcuOsEobhcxYAF3Oup2YFqfIGcuH9r+nEgm4a/diSQkst8j5VM+M4GAEvdPPTZpwDAAAAAADg
+t+FjTH/Hs0sCBr6VCBDEDj46H9zwBxgBgtiCTFY4uyAgAadujTw2IIgVfJICNssGoRYEpkubN+6a
+pr0wWVZ4Lgx9iBgZVngq4QOmvQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAm+Hd2AUDFv39QxBL/
+fQvy9+xCgMK/fxgipoAgtvhvEOTv2cUABASxBkyWMSCIMTDttQYGiDWgBwAAAAD2g6s1bIEb5Yzx
+PT4giDEgiCk8TJYtPJy6MTxGiDEwRCzhcSvpUay7TRHTXmNgYWgM3EoKAAAVt8+zSwAkt/v98+wy
+AMH9m7PLAAq3pyCfZ5cCMBDEGPc7bJYpIIgxYLKMAUGsAYtlDCwMrYGtEwAAACZ5nF0AUPF4QBFL
+fHwL8nV2IUDh8cAQMQUEscXHIMjX2cUABASxBkyWMXQFwdUam1EVBJfPbEdTEFzPtB1Vp44LzLYD
+QayhaLJwCeYeIIgxNDcXYbL2oDvrhSDb0VsWYtprDQwQa0APAAAAAOwgXSWHu07MEIdbTiCIGaLz
+wQ1/gBEgiDEGQXA9kx3gQ2xB15FCECOQrYLNsgHf14tbSY/hnbtOv/UwWVZ4Lgx9iBgZRnhOr6IP
+mPYCAAAAAAAAAAAAAAAAAAAAAABoBW7LsgXuL7MFrok1Bq74MwYEsQVuJTUGBLEGTJYxIIgxdKe9
+uHxmO6r3KON6ph3gArNfA674MwYEsQWuiTUGBLEGTJYxIIgxMO21BgaINaAHAAC8Bldr2AI3yhnD
+B1zPZA0IYgwIYgsPQWyBWZYtMECMwZfFYvqrzLrbFDFAjIGFoTFixN4JAAAAAAAAAAAAAAAAAAAA
+AAAA++AbVLbAdwxtgW/hGgPfUzdGv4LcPs8uwR76vevkdr9/nl2GHfQryP2bs8uwh15N1u0pyOfZ
+pdgBBDFGr4Lc7xe1WRDEFt069auaLAhijV5NlrIgqhdbdymIrg9RvGq8181FVUFUL+Pvc4Domizd
+/66iSz2uLEinKFss/JdHW1Hc7VUWpE+TpXoeomqyOnXqqmgK0uu0VxXNae/hC8PhSo2r33Wia7EO
+FSR2IYje1snhm4vRBzfcSgpmOX63F4K85nAfkgS5+u1MHe32kiDqPkQzLqsjp87WSlsQzbisrqa9
+LEjQfY7ycYjWEDnJqTsSRM10XXW3t7kgb9118iHqJktTENXNxeMXhjH4ENWduuaJYW+CfK8N9ae9
+qke42FzczlV9SLfb76qCqAY59HpApRpJiiP17ah+YQeCbOeqK/VuuehKvVuuO8vqlMuu1Hvlsiv1
+XrnsSr1XIIgxIIgx4EOMAUGMAUGMgXWIMfRX6h9fZ9fxUujPsjBGNqHvQzDz3cQhgnypZN/nieF1
+BcGZ+mZYEA2bhaiT7agK0utdJxDEGFf1Id3elwVBjHGIydLIvFeTdYQgXxqZQ5DtfGguC3ud9l53
++73PAXJhQTrdOsF5iDEgiDEOWId8nV3HS3HEwvDr7EpeCUVBVLeyukVPkKIHtk42oCfIA4LsQW2W
+JQaIks3qcx2iNkIgyD7UBHlAkF2omaxOBfEHXJcFH7Ier36h3E8EebRhb9FPESRoC/ITH/ILBdG/
+4c+qIGmd8VP+Xk+Qpj7kGej+yP9IH/L1qH63hl8rSMtp78ez6R+P/E+N+N2qvCBIA1r6DAjycz5W
+CvK1JjPrgqjdvQhBMmtvUzzGqTdRpOk81+gI0b9q/H5vNkZ+iyChdaYVJMjnz7O6tsmywr3dEIEg
+LWgoyO+Y9mpzb2uz8uJvkY+G57l9noe0FERsj1S68BJ9w9bJCiDIFh5VWFZbJTIQZCsf6334HjoX
+RCFvCLIDTUEu9R+6WOEGQWxxXZP1r+dvUF3Qqf/X5wC5riCDydJsmZO4rMnqVRBNp64pSLdO3elZ
+LAiyi9vzwFDzKztfOuXu1WSl/5xY8zttXyp59ztCFP+3aAiyCwhiDAhyKPcm7Hy44l7WZZ06BDHG
+qYJ86O4tQpDN6A0Q+JB9qN2qAUH2oXfNCUzWHmCyJpwqiKJThyB7wJn6HvRW6liH7AJbJ8aAIMaA
+ybLF7Xl8q3QLJgTZwU+Xfq/Q3MvqNS7rlgX5VMldb4B0G7l4++FS4w2aN8R2qYdu9DvYTFmMf55d
+lM30OELuFxakRx9yu7AgXc6y7hcW5Oh1SLr+UvmuEwhii9uFBelyLwuCWOPCgnRpsiCINTDttcaF
+BelyYYitE3tcWJC2rL2VVBsIYgxsvxsDghgDFssYGCDGgB7GgB7GgCDGgCDGgCDGuLAgPe9lnV2K
+PfS526v3X69q0+d5yIUF6fLE0F3YZEEQW/QZdeKua7IgiDVgsowBQYzRqyBXNVnwIcaAINbo1WTB
+hxjjsoJgL8safQ6QCwvS6XmIu6jF6pfbVQdIr2CE2OLCPqRPIIgxLrsO6RUIYgyYLGNAEGPAZBkD
+ghgDJssYEMQasFjGgCC2gMkyBgQxBqa921C/ogaCbEL5mlgHk7URHxwEsURUFwTT3k08BQm6j0CQ
+wxaiUxdE8z8F648jBAEbOMBkgS2wU/fa099fz7pbSfWnvWAT+gtDsA0jt/sCAAAAAAAAAAAAAAD6
+ZLwnPN0hXr1nHIf9zHL8wpubPtBfNT7yaY2PuTTh+df4memzz799laco3PPn1zXxpTxxoUAbqiuT
+LeS0j7eC+PWCDDv+kXaZy27zQv0HLVJyluX7Xz8VJOX0UpA4jrKZlFsUYHg5txm+8hBpnKzlOUd8
+8/MW+Yc2idxW/Mk4n48PT0FyO1OaSK+nhXotyDj/yfMmgszUYG4Yh/fJGh50PPsk/Ul5f3e1Z7vw
+mz4MJ5TpT/rd0Im5N/uUKHWa6Er/e74VU6sNH/SURxlEjvWrBcmD7fn6+2NDBsMPpSSUnXsmyCPt
++amQfgip3KXILr1BOQ0jaFS5ofZ1Jtz4z9YIqQQzyVraLKrtWBBXCs/ayN9x7UJ6l4UaquBzMdMb
+Sd36EyxIiEKQ75QjQbx4YhDPpex8NpKRehElSalnBQl5rI0ql3uEzEQKUrqEmz6rrSDZu+afqbfn
+N5990OVBQ78TL5ywUdlbxtyPUj/MapGZoBFFgtAcoDj14ZHlMbn9co8XBaChJ3Tzw3CiJLGqTn7x
+rIQTglDlyhCVmZAgw6dyB51Jtt7PrhRkmNuUVk1lyW+mZk7GRlQq98hUVm5TEjGIvhWGWi8JQqOl
+OPVaEEepSZChMEIQl0vjA30qJ/Gxqg5rGZ2rRkiqXBCClEyGEiUjRcZkLllrQcQAKTWgN4cWDJHG
+LI/WIkgUnbxoJ0dIEoTMUB77IeUtfQiNDymIz84okiCDJSoGyOXSyEbKDmVBkFgLEjnLXCmRSbJV
+Lk1Gn2mSgRsnO1IQn4szlEQIEqQgub97R72l8iExC5J7/0SQWAkSpyPkmWnwQpBkbGKeLQzNORbE
+LwnifOVDqHJuTpAyzodP5Qn6NFlrQYTFEu4h8FQpTyqlDyHHRk05fDTS51w1y0rv8YSpMlnTEZIe
+UPmQmMwg+xAn5l9eODJqJJ8HpKwO+5DgvBSEKufGtogcNa1qfeoVPLpkssaCTKe9Yi6czIWYZU2m
+W2WWNV4YCrf0zEj07bRULFkVa1YJknNOv6hmWWWopAIMno4bictdPuFGo9uVBDSlS+NAZlIESfmE
+bA7GyRrPstIEjpyrECS/m6fqQhA/WpAUQYJwKcK3cKuHkSDU7dOvHAtd5OZlRuR1CI+dwarzIOJG
+olWDLPLUh/AvKctakHoPIyavTt5xlKylINto8+QDayDadM1KfXVmo18cVZ0JjQQ5LqjylSBby7D8
+AaWY3WK3FmkmiE4NZh4lys51e7nbu1z3xbY5z2IBAAAAAABwTcZrgnZRJ/wCUSdbeCvID6JOeAd5
+vv60SRUQdfIir2ZRJ77sWCHqZD1ypz3l3S7qJB0iOYeokyn3OT5zY2lFneTNdYeok62CKEWdxIio
+k52CiDPchlEnLsuDqJOtgihFnaSmQtRJW0H2R52EwSUg6mSHIMJitYs6ya2XHhEQdbJBkOm0NyLq
+RDnq5K0gkZ1ry6gTGnSIOtGizZMRddKMRoIg6mTdA+PblmomiE4NZh4lys51Q9QJAAAAAAAA5zJe
+E2yJOvFhNs7Ey2OOIHOZySptcQ+p/B/OxIfJGbnY4hfPd3IVEMdLgskCIcb61XzdVq4rqmTNVlZv
+BfGvBJnbTqS9p+C4qSmXGbXzIdCQ5A9nEieC+PeC5GMqmfu4ZWP9crZu40yWKx+qH3c0/hw/izqJ
+4jyV9qhyMEl6p9rEnhPE0w7/9z9/OJNJIJCMMlkUJMyPqvk3oluo28ybc+nmO8yPkTvtqZxzUSch
+UphJ5CCNcjRBe0N8XBHLu+mEiQ5g816rHFZFEOcqQaoTxhK0QrvN6ZyJCphjP2j7NiehD5dAB7nD
+6+iEehJ5UmdC9fN5Q9rT4B8/awuPOb5S/VdEnchwD3Ei4cl/eDp8Ho7naJs6C0JOIeYj0DARJHop
+SIgjQULZbnfyYIYOSAKfSvi8yU+RLfLAphaEjrVmI0/qTIQgpUtMk7UU5E3UCcUYBBl4wo0ZUiMm
+AdhVyKqkrlWitjgjSkCehp16OpHjU0M+rqAoE+oNocQ+8Ls5GqSKFRMvKdJEChJHkSdVJixISjWM
+jzCTbNvm8RtBxBnuXNTJSJBIT8/nPBRnIgWpDXwJOZgThM0lO/WRIJ46YBaEol5IkEBxIzKMK/n4
+0bl6ya8eIZwDtzRnwmEcPoY8LMJcspaCvIs6CcKzUNyH7Dh0blYFLHiWxYsYkFFGIfetIkiJpCiC
+OHIHLEgsgYSpOekwsjRSjC8EiaEWhCNP8umnyCT1EQoxi5R6kuwoQXyk4/1KkGyyqjgTPsusBUke
+2OcQxjojFiRIQXIkohwhg992QpDswAJHjJI5LY0U4oIgjgLsOZSVGnUqiBjnjrxMjDPJWgoiLNZc
+1ImI0aP+67IgkVImu1QEoXjXPMuivlpnRAkmIySFgkgfMiTzxYew1NmpB4oMocKTErJK7EOypWYf
+4urIkyqTYgrSCC9zyDpZQ0Gm095YRZ3keAKOOxCzrOnCsMxZQjZ1rEuKUBYZiccNjfcn0rxICJIs
+ScqgmmXlmd3wRCop5x4omzrypIpX4dlHjHXkSZVJESTPwyKtY+tkDWdZafL2Iuok5KAPasdKEBFn
+4kUESSTfIy1XHGXEtQzZRwT+ekiUBoEX9IHXIYF8SA6yHQuSpnbjyJOxDwmzkSdVJtyGPreF55iZ
+Ktlhp9I1zQJGzok8WbNSf8niJ1qt1DdXrlXASLOMVjxq8eXmVlz+gEb3KnbrZZpmD2tfg4VHyafW
+r7aWYbnQJw0QAAAAAAAALsl4PfAq6oQuApgkmIs9oe+w0kfd7OIpnzfQB1w+rYrT6xzKbn6o3qqP
+2F9XZmUA/Mo1hUzWbl34VhD/XpDpFqNzMp7EuRXXnTjxPTc/FcS/F4TOJeeKPmk2OsuZa+dVgoyS
+tQsDevNz3Yrzj+Vj1ZwmVdaHcdvNCBJi9YHybeUwSUl/LwsyLt5CJuXlbHXiqrfG77XaCJI77Snj
+maiTet992Bn1Od6iHDRMYk/ojDV1f/6aYZC7r+KMqJi1lEF1ulgiTKKIEImevvibRhqNVJ+TDNvN
+5bRAftGTjp/FIWy+iGKcCTe+OKV002Qbbda/Of5St4pvok5YkMAHqWl3ns5o/FzsCe1UZ6cQq+tO
+KkGCOHXwdAgmv+tLpxihuu6EFPB0KkCVEX2pnHTUgoguI0JTqO/ITKQgpUu46bMaCvI+6iSWblvO
+VWVcxFDEOvaEwxdivmiBzAQFSlBdyann48Z0OBKik52BDulED3F0BhiDSJoHTDmPd+OXQx5OCOLT
+RSZkJ0eZkCC+vu5knGzjxvEbQcQZ7nzUSS1IoPd4QM/FnpTz9cFHLwtSnctxfxaCUNQJCZLLwII4
+z6WWJ1CBC0Sny9kepkNlOUI4B25pziQfoaed3jQs3EyypoKsiDp5I8hc7EmuXkgjJDVNae7kpvK5
+t/AhPAKFIHScTd9qj3zMm22XLweR1EgxvhIkjgShQJZ8rCkzSX0k6SKuOxknO0wQv0KQ+dgTEiT3
+1pCnzbOCFAVJ1tEI8TlghQXJQyvPFobmHwvilwRJYagijLV4xElLc5dzqRiBKjlK1lQQYbGENU5v
+ci8a+xAhSJQ/BBkCN/Ti4Bw1TYocqU3WdISkyUzlQyjyhedwSZDhXS9CSKiRqPnDnA8J1TyQHleM
+rMyEBfEp2iPQbH6UrKUg02lvrKNOyM6UWRYJQkFW09gTDufgZq+uO/H15DF94H8UsyIEyZ2RI1/K
+LIvmPXWMCTVSKbooHTl1McvKCXjmNc6kCJLnYZ5mWXWylrOsNOheRJ1IQXhSUwsyiT3JsWvFzXCI
+UBgJEuQH0sqhFoTCsUjSQNOu3JQlxqQ0Ul41lHWIEKRah0Sa3c8IUm9jpBkj722Mkm0UxBw8ozzk
+UUsvtxdh+Uw9bMjFIL7qfLqPCosvN7fi8gc0alPslj7+sCdVKvBDX+72vij10geubrEAAAAAAAAA
+AICe+T/DX7zwyPhMkQAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyNC0xMi0xOVQwODo0OTowMSswMDow
+MKuLjUkAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjQtMTItMTlUMDg6NDk6MDErMDA6MDDa1jX1AAAA
+AElFTkSuQmCC
+" /></div>
+
+</pre>
+</body>
+</html>
